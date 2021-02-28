@@ -49,6 +49,8 @@ public class LoginController {
         try {
             System.out.println("signup page");
 
+            Stage loginStage =(Stage) login_signup_label.getScene().getWindow();
+            loginStage.close();
             Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Signup.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Chatter");
