@@ -34,5 +34,6 @@
         <Label layoutX="59.0" layoutY="279.0" text="Confirm Pass" textFill="WHITE" />
         <PasswordField fx:id="signup_confirm_password" layoutX="144.0" layoutY="275.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="confirm password" />
         <Label id="error_message" fx:id="sign_error_message" layoutX="213.0" layoutY="326.0" prefHeight="17.0" prefWidth="69.0" textFill="#eb0721" />
+      <Label id="signup_login" fx:id="signup_login_label" layoutX="17.0" layoutY="443.0" onMouseClicked="#loginPage" text="&lt;- Login" textFill="#fca311" />
     </children>
 </AnchorPane>
