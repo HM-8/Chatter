@@ -2,6 +2,8 @@ package backend;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -22,6 +24,8 @@ public class SignUpController {
     private Label sign_error_message;
     @FXML
     private Button signup_submit_button;
+    @FXML
+    private Label signup_login_label;
 
     @FXML
     public void validation(){
@@ -54,12 +58,22 @@ public class SignUpController {
     }
 
     @FXML
-    public void loginInSubmitButton() throws IOException {
-        if (signup_username.equals(null)|| signup_username.getLength()<4){
-            sign_error_message.setText("x-error username can't be left Empty and must be more than Four character");
-        }
-        else if (signup_password.equals(null)|| signup_password.getLength()<8){
-            sign_error_message.setText("x-error password can't be left Empty and must be more than Eight character");
+    public void loginPage() {
+
+        try {
+            System.out.println("signup page");
+
+            Stage loginStage =(Stage) signup_login_label.getScene().getWindow();
+            loginStage.close();
+            Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Login.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Chatter");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+
+        } catch (IOException e) {
+            System.out.println("Can't load window!");
         }
     }
 }
