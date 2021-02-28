@@ -8,6 +8,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class LoginController {
     @FXML
@@ -34,9 +37,25 @@ public class LoginController {
     @FXML
     public void loginInSubmitButton() {
         try {
-            System.out.println("Username: " + login_username.getText());
-            System.out.println("Password: " + login_password.getText());
-            System.out.println("logged in successfully!");
+            DatabaseConnectionHandler connectNow = new DatabaseConnectionHandler();
+            Connection connectDb = connectNow.getConnection();
+
+            String verifyLogin = "SELECT count(1) FROM users WHERE user_name = '" + login_username.getText() + "' AND password = '" + login_password.getText() + "'";
+
+            try {
+                Statement statement = connectDb.createStatement();
+                ResultSet queryResult = statement.executeQuery(verifyLogin);
+
+                while (queryResult.next()) {
+                    if (queryResult.getInt(1) == 1) {
+                        System.out.println("Logged in successfully!");
+                    } else {
+                        System.out.println("Invalid login! Please try again.");
+                    }
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
