@@ -10,8 +10,7 @@ public class Server implements Runnable{
 
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(port);
-        //Run migrations
-        new DatabaseConnectionHandler().runMigration();
+        DatabaseConnectionHandler.getHandler().runMigration();
     }
     public void run(){
         System.out.println("Server Running at port 5000");
