@@ -1,5 +1,10 @@
 package backend;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,9 +12,23 @@ import java.net.ConnectException;
 import java.net.Socket;
 
 public class Client {
+    private static Client client=new Client();
     private Socket socket;
-    private DataInputStream incomingStream;
-    private DataOutputStream outgoingStream;
+    private static DataInputStream incomingStream;
+    private static DataOutputStream outgoingStream;
+
+    public static Client getClient() {
+        return client;
+    }
+
+    public static DataInputStream getIncomingStream() {
+        return incomingStream;
+    }
+
+    public static DataOutputStream getOutgoingStream() {
+        return outgoingStream;
+    }
+
 
     public Client() {
         try {
@@ -17,16 +36,10 @@ public class Client {
             this.incomingStream = new DataInputStream(socket.getInputStream());
             this.outgoingStream = new DataOutputStream(socket.getOutputStream());
         }catch (ConnectException e){
-            // Unable to connect to server
             System.out.println("Unable to connect to server");
             System.exit(1);
         }catch (IOException e){
             e.printStackTrace();
         }
-    }
-    public static void main(String[] args) throws IOException {
-        Client client = new Client();
-        client.outgoingStream.writeUTF("Hello World");
-        client.incomingStream.readUTF();
     }
 }

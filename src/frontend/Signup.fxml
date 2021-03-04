@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane onKeyReleased="#validation" prefHeight="474.0" prefWidth="502.0" style="-fx-background-color: #1D3557;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="backend.SignUpController">
+<AnchorPane prefHeight="474.0" prefWidth="502.0" style="-fx-background-color: #1D3557; -fx-border-color: #fca311;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="backend.controller.SignUpController">
     <children>
-        <Label layoutX="31.0" layoutY="51.0" text="First Name" textFill="WHITE">
+        <Label layoutX="85.0" layoutY="84.0" text="First Name" textFill="WHITE">
             <font>
-                <Font size="13.0" />
+                <Font name="System Bold" size="13.0" />
             </font>
         </Label>
-        <TextField id="firstname" fx:id="signup_firstname" layoutX="31.0" layoutY="93.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="First Name" style="-fx-border-: gone;" />
-        <Label layoutX="271.0" layoutY="52.0" text="Last Name" textFill="#eeeeee">
+        <TextField id="firstname" fx:id="signup_firstname" layoutX="180.0" layoutY="81.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="First Name" style="-fx-border-: gone;" />
+        <Label layoutX="86.0" layoutY="138.0" text="Last Name" textFill="#eeeeee">
             <font>
-                <Font size="13.0" />
+                <Font name="System Bold" size="13.0" />
             </font>
         </Label>
-        <TextField id="lastname" fx:id="signup_lastname" layoutX="271.0" layoutY="93.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="Last Name" />
-        <Label id="username" layoutX="31.0" layoutY="146.0" text="Username" textFill="#eeeeee">
+        <TextField id="lastname" fx:id="signup_lastname" layoutX="180.0" layoutY="135.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="Last Name" />
+        <Label id="username" layoutX="83.0" layoutY="292.0" text="Username" textFill="#eeeeee">
             <font>
-                <Font size="13.0" />
+                <Font name="System Bold" size="13.0" />
             </font>
         </Label>
-        <TextField id="username" fx:id="signup_username" layoutX="31.0" layoutY="184.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="Username" />
-        <PasswordField id="password" fx:id="signup_password" layoutX="271.0" layoutY="184.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="Password" />
-        <Label layoutX="281.0" layoutY="156.0" text="Password" textFill="#eeeeee">
+        <TextField id="username" fx:id="signup_username" layoutX="180.0" layoutY="293.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="Username" />
+        <PasswordField id="password" fx:id="signup_password" layoutX="180.0" layoutY="185.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="Password" />
+        <Label layoutX="85.0" layoutY="188.0" text="Password" textFill="#eeeeee">
             <font>
-                <Font size="13.0" />
+                <Font name="System Bold" size="13.0" />
             </font>
         </Label>
-        <Button id="signup_submit" fx:id="signup_submit_button" layoutX="191.0" layoutY="358.0" mnemonicParsing="false" onAction="#signUpSubmitButton" prefHeight="17.0" prefWidth="120.0" style="-fx-background-color: #fca311; -fx-border-radius: 0;" text="Register" textFill="#f8f8f8" />
-        <Label layoutX="59.0" layoutY="279.0" text="Confirm Pass" textFill="WHITE" />
-        <PasswordField fx:id="signup_confirm_password" layoutX="144.0" layoutY="275.0" onKeyReleased="#validation" prefHeight="25.0" prefWidth="208.0" promptText="confirm password" />
-        <Label id="error_message" fx:id="sign_error_message" layoutX="213.0" layoutY="326.0" prefHeight="17.0" prefWidth="69.0" textFill="#eb0721" />
-      <Label id="signup_login" fx:id="signup_login_label" layoutX="17.0" layoutY="443.0" onMouseClicked="#loginPage" text="&lt;- Login" textFill="#fca311" />
+        <Button id="submit" fx:id="signup_submit_button" layoutX="191.0" layoutY="377.0" mnemonicParsing="false" onAction="#signUpSubmitButton" prefHeight="17.0" prefWidth="120.0" style="-fx-background-color: #fca311; -fx-border-radius: 0;" text="Register" textFill="#f8f8f8" />
+        <Label layoutX="85.0" layoutY="244.0" text="Confirm Pass" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Label>
+        <PasswordField fx:id="signup_confirmPassword" layoutX="180.0" layoutY="238.0" prefHeight="25.0" prefWidth="208.0" promptText="confirm password" />
+        <Label fx:id="sign_error_message" layoutX="183.0" layoutY="406.0" prefHeight="25.0" prefWidth="227.0" textFill="#eb0721">
+         <opaqueInsets>
+            <Insets top="-40.0" />
+         </opaqueInsets></Label>
+      <Label fx:id="login_Back_label" layoutX="31.0" layoutY="426.0" onMouseClicked="#loginPage" text="&lt;-Login" textFill="#c4c44f" />
     </children>
 </AnchorPane>

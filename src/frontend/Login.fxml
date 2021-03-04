@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="484.0" style="-fx-background-color: #1D3557;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="backend.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="484.0" style="-fx-background-color: #1D3557;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="backend.controller.LoginController">
     <children>
         <Label layoutX="89.0" layoutY="168.0" text="Username:" textFill="#f1faee" />
         <Label layoutX="89.0" layoutY="219.0" text="Password:" textFill="#f1faee" />
@@ -16,7 +16,8 @@
                 <Font size="25.0" />
             </font>
         </Label>
-      <Label id="login_signup" fx:id="login_signup_label" layoutX="106.0" layoutY="329.0" onMouseClicked="#signupPage" text="Don't have an account? Signup here!" textFill="#fca311" />
+      <Label layoutX="106.0" layoutY="347.0"  text="Don't have an account?" textFill="white" />
+        <Label id="login_signup" fx:id="login_signup_label" onMouseClicked="#signupPage" text="Signup" textFill="#fca311"/>
       <Label id="error_message" fx:id="login_error_message" layoutX="228.0" layoutY="268.0" textFill="WHITE" />
     </children>
 </AnchorPane>
