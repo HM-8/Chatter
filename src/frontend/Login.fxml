@@ -16,8 +16,9 @@
                 <Font size="25.0" />
             </font>
         </Label>
-      <Label layoutX="106.0" layoutY="347.0"  text="Don't have an account?" textFill="white" />
-        <Label id="login_signup" fx:id="login_signup_label" onMouseClicked="#signupPage" text="Signup" textFill="#fca311"/>
-      <Label id="error_message" fx:id="login_error_message" layoutX="228.0" layoutY="268.0" textFill="WHITE" />
+      <Label layoutX="106.0" layoutY="347.0" text="Don't have an account?" textFill="white" />
+        <Label id="signup_page" fx:id="signup_page_label" layoutX="237.0" layoutY="347.0" onMouseClicked="#signupPage" text="Signup" textFill="#fca311" />
+      <Label id="error_message" fx:id="login_error_message" layoutX="168.0" layoutY="249.0" textFill="RED" />
+      <Label layoutX="274.0" layoutY="347.0" text=" here!" textFill="WHITE" />
     </children>
 </AnchorPane>

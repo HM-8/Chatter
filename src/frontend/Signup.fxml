@@ -37,10 +37,10 @@
             <Font name="System Bold" size="13.0" />
          </font></Label>
         <PasswordField fx:id="signup_confirmPassword" layoutX="180.0" layoutY="238.0" prefHeight="25.0" prefWidth="208.0" promptText="confirm password" />
-        <Label fx:id="sign_error_message" layoutX="183.0" layoutY="406.0" prefHeight="25.0" prefWidth="227.0" textFill="#eb0721">
+        <Label id="error_message" fx:id="sign_error_message" layoutX="180.0" layoutY="327.0" textFill="#eb0721">
          <opaqueInsets>
             <Insets top="-40.0" />
          </opaqueInsets></Label>
-      <Label fx:id="login_Back_label" layoutX="31.0" layoutY="426.0" onMouseClicked="#loginPage" text="&lt;-Login" textFill="#c4c44f" />
+      <Label id="login_page" fx:id="login_page_label" layoutX="31.0" layoutY="426.0" onMouseClicked="#loginPage" text="Login" textFill="#fca311" />
     </children>
 </AnchorPane>
