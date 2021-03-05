@@ -1,6 +1,6 @@
 package backend.controller;
 
-import backend.DatabaseConnectionHandler;
+import backend.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,9 +9,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class LoginController {
     @FXML
@@ -21,7 +18,7 @@ public class LoginController {
     @FXML
     private Label login_error_message;
     @FXML
-    private Label login_signup_label;
+    private Label signup_page_label;
     @FXML
     private Button login_submit_button;
 
@@ -38,29 +35,28 @@ public class LoginController {
     @FXML
     public void loginInSubmitButton() {
         try {
-            DatabaseConnectionHandler connectNow = new DatabaseConnectionHandler();
-            Connection connectDb = connectNow.getConnection();
+            UserRepository userRepository = new UserRepository();
+            String[] user = {login_username.getText(), login_password.getText()};
+            var queryResult = userRepository.selectSingleUser(user);
 
-            String verifyLogin = "SELECT count(1) FROM users WHERE user_name = '" + login_username.getText() + "' AND password = '" + login_password.getText() + "'";
+            while (queryResult.next()) {
+                if (queryResult.getInt(1) == 1) {
+                    System.out.println("Logged in successfully!");
 
-            try {
-                Statement statement = connectDb.createStatement();
-                ResultSet queryResult = statement.executeQuery(verifyLogin);
-
-                while (queryResult.next()) {
-                    if (queryResult.getInt(1) == 1) {
-                        System.out.println("Logged in successfully!");
-                    } else {
-                        System.out.println("Invalid login! Please try again.");
-                    }
+                    Stage loginStage =(Stage) signup_page_label.getScene().getWindow();
+                    loginStage.close();
+                    Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Chat.fxml"));
+                    Stage stage = new Stage();
+                    stage.setTitle("Chatter");
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                } else {
+                    System.out.println("Invalid login! Please try again.");
                 }
-            }catch (Exception e) {
-                e.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @FXML
@@ -69,7 +65,7 @@ public class LoginController {
         try {
             System.out.println("signup page");
 
-            Stage loginStage =(Stage) login_signup_label.getScene().getWindow();
+            Stage loginStage =(Stage) signup_page_label.getScene().getWindow();
             loginStage.close();
             Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Signup.fxml"));
             Stage stage = new Stage();

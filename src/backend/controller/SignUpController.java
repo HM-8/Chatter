@@ -1,6 +1,6 @@
 package backend.controller;
 
-import backend.DatabaseConnectionHandler;
+import backend.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,8 +9,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Statement;
 
 public class SignUpController {
     @FXML
@@ -28,7 +26,7 @@ public class SignUpController {
     @FXML
     private Button signup_submit_button;
     @FXML
-    private Label signup_login_label;
+    private Label login_page_label;
 
     @FXML
     public void validation(){
@@ -39,7 +37,7 @@ public class SignUpController {
         }
         else if (signup_password.getLength()<8){
             sign_error_message.setText("password must be more than 8 strings");
-        }else if (signup_password.equals(signup_confirm_password)){
+        }else if (signup_password.getText().equals(signup_confirm_password.getText())){
             sign_error_message.setText("the password is correct");
         }else sign_error_message.setText("the password must be the same");
     }
@@ -61,27 +59,37 @@ public class SignUpController {
             sign_error_message.setText("x-error password can't be left Empty and must be more than Eight character");
         }
 
-        DatabaseConnectionHandler connectNow = new DatabaseConnectionHandler();
-        Connection connectDb = connectNow.getConnection();
 
-//        check if syntax
-        String username= "SELECT user_name FROM user";
-        if(signup_username.equals(username)){
+        UserRepository userRepository = new UserRepository();
+        String userName = signup_username.getText();
+
+        //Fix this
+        if(userRepository.ifUserNameExists(userName)){
             sign_error_message.setText("Username already in use.please go back to login page or Enter another username");
+            signup_username.clear();
         }else{
-            String insertFields= "INSERT INTO users( first_name,last_name, user_name, password) VALUES ('";
-            String insertValues= signup_firstname.getText() + "','" + signup_lastname.getText() + "','" + signup_username.getText()+ "','" + signup_password.getText() + "')";
-            String insertToRegister= insertFields+insertValues;
-            try{
-                Statement statement=connectDb.createStatement();
-                statement.executeUpdate(insertToRegister);
+            String[] user = {
+                    signup_firstname.getText(),
+                    signup_lastname.getText(),
+                    signup_username.getText(),
+                    signup_password.getText()
+            };
+            var queryResult = userRepository.insertSingleUser(user);
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(queryResult)
+            {
+                Stage loginStage =(Stage) login_page_label.getScene().getWindow();
+                loginStage.close();
+                Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Chat.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Chatter");
+                stage.setScene(new Scene(root));
+                stage.show();
+            } else {
+                System.out.println("Error: Didn't create user!");
             }
-            Stage stage;
-            stage= FXMLLoader.load(getClass().getResource("sample.fxml"));
-            stage.show();
+
+
         }
     }
 
@@ -91,7 +99,7 @@ public class SignUpController {
         try {
             System.out.println("signup page");
 
-            Stage loginStage =(Stage) signup_login_label.getScene().getWindow();
+            Stage loginStage =(Stage) login_page_label.getScene().getWindow();
             loginStage.close();
             Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Login.fxml"));
             Stage stage = new Stage();
