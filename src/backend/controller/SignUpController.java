@@ -1,6 +1,6 @@
 package backend.controller;
 
-import backend.repository.UserRepository;
+import backend.routes.UserRoutes;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -60,11 +60,11 @@ public class SignUpController {
         }
 
 
-        UserRepository userRepository = new UserRepository();
+        UserRoutes userRoutes = new UserRoutes();
         String userName = signup_username.getText();
 
         //Fix this
-        if(userRepository.ifUserNameExists(userName)){
+        if(userRoutes.ifUserNameExists(userName)){
             sign_error_message.setText("Username already in use.please go back to login page or Enter another username");
             signup_username.clear();
         }else{
@@ -74,7 +74,7 @@ public class SignUpController {
                     signup_username.getText(),
                     signup_password.getText()
             };
-            var queryResult = userRepository.insertSingleUser(user);
+            var queryResult = userRoutes.insertSingleUser(user);
 
             if(queryResult)
             {

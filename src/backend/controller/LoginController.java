@@ -1,6 +1,6 @@
 package backend.controller;
 
-import backend.repository.UserRepository;
+import backend.routes.UserRoutes;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,9 +35,9 @@ public class LoginController {
     @FXML
     public void loginInSubmitButton() {
         try {
-            UserRepository userRepository = new UserRepository();
+            UserRoutes userRoutes = new UserRoutes();
             String[] user = {login_username.getText(), login_password.getText()};
-            var queryResult = userRepository.selectSingleUser(user);
+            var queryResult = userRoutes.selectSingleUser(user);
 
             while (queryResult.next()) {
                 if (queryResult.getInt(1) == 1) {

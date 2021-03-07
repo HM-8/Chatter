@@ -1,4 +1,4 @@
-package backend.repository;
+package backend.routes;
 
 import backend.DatabaseConnectionHandler;
 
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
 
-public class UserRepository {
+public class UserRoutes {
     private static Statement statement;
 
     static {

@@ -1,4 +1,4 @@
-package backend.repository;
+package backend.routes;
 
 import backend.DatabaseConnectionHandler;
 import backend.models.Message;
@@ -9,7 +9,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageRepository {
+public class MessageRoutes {
     private static Statement statement;
 
     static {
