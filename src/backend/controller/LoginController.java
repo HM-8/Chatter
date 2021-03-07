@@ -1,16 +1,29 @@
 package backend.controller;
 
-import backend.routes.UserRoutes;
+import backend.Client;
+import backend.models.ErrorMessage;
+import backend.models.JSONizable;
+import backend.models.Request;
+import backend.models.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class LoginController {
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static DataOutputStream outgoingStream = Client.getOutgoingStream();
+    private static DataInputStream incomingStream = Client.getIncomingStream();
     @FXML
     private TextField login_username;
     @FXML
@@ -23,11 +36,11 @@ public class LoginController {
     private Button login_submit_button;
 
     @FXML
-    public void validation(){
+    public void validation() {
         if (login_username.getText() == null) {
             login_error_message.setText("Empty");
         }
-        if (login_password.getLength()<8){
+        if (login_password.getLength() < 8) {
             login_error_message.setText("password must be more than 8 strings");
         }
     }
@@ -35,26 +48,32 @@ public class LoginController {
     @FXML
     public void loginInSubmitButton() {
         try {
-            UserRoutes userRoutes = new UserRoutes();
-            String[] user = {login_username.getText(), login_password.getText()};
-            var queryResult = userRoutes.selectSingleUser(user);
-
-            while (queryResult.next()) {
-                if (queryResult.getInt(1) == 1) {
-                    System.out.println("Logged in successfully!");
-
-                    Stage loginStage =(Stage) signup_page_label.getScene().getWindow();
-                    loginStage.close();
-                    Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Chat.fxml"));
-                    Stage stage = new Stage();
-                    stage.setTitle("Chatter");
-                    stage.setScene(new Scene(root));
-                    stage.show();
-                } else {
-                    System.out.println("Invalid login! Please try again.");
-                }
+            //send request
+            Request request = new Request("login", new String[]{login_username.getText(), login_password.getText()});
+            outgoingStream.writeUTF(request.toJSON());
+            //receive response
+            JSONizable parsedInput = JSONizable.fromJSON(incomingStream.readUTF());
+            if (parsedInput instanceof ErrorMessage) {
+                ErrorMessage e = (ErrorMessage) parsedInput;
+                System.out.println(e.message);
+                login_error_message.setText(e.message);
+            } else {
+                User user = (User) parsedInput;
+                Client client = Client.getClient();
+                client.setId(user.id);
+                client.setUsername(user.username);
+                client.setFullName(user.fullName);
+                Stage loginStage = (Stage) signup_page_label.getScene().getWindow();
+                loginStage.close();
+                Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Chat.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Chatter");
+                stage.setScene(new Scene(root));
+                stage.show();
             }
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -65,7 +84,7 @@ public class LoginController {
         try {
             System.out.println("signup page");
 
-            Stage loginStage =(Stage) signup_page_label.getScene().getWindow();
+            Stage loginStage = (Stage) signup_page_label.getScene().getWindow();
             loginStage.close();
             Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Signup.fxml"));
             Stage stage = new Stage();

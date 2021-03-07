@@ -1,9 +1,9 @@
 package backend.models;
 
 public class User extends JSONizable {
-    private int id;
-    private String username;
-    private String fullName;
+    public int id;
+    public String username;
+    public String fullName;
 
     public User(int id, String username, String fullName) {
         this.id = id;

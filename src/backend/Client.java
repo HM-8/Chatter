@@ -13,6 +13,10 @@ import java.net.Socket;
 
 public class Client {
     private static Client client=new Client();
+
+    private int id;
+    public String username;
+    public String fullName;
     private Socket socket;
     private static DataInputStream incomingStream;
     private static DataOutputStream outgoingStream;
@@ -29,6 +33,17 @@ public class Client {
         return outgoingStream;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public Client() {
         try {
