@@ -1,6 +1,8 @@
 package backend.controller;
 
 import backend.Client;
+import backend.models.JSONizable;
+import backend.models.Message;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -22,19 +24,40 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
     @FXML
     private TextField chatTextField;
     @FXML
-    private static TextArea chatTextArea;
+    private TextArea chatTextArea;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.chatTextField.setText("");
+        this.chatTextArea.setEditable(false);
+        Thread thread = new Thread(new IncomingMessageListener());
+        thread.start();
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
         try {
-            out.writeUTF(chatTextField.getText());
+            Client client = Client.getClient();
+            DataOutputStream outgoingStream = client.getOutgoingStream();
+            out.writeUTF(new Message(client.getId(),chatTextField.getText()).toJSON());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private class IncomingMessageListener implements Runnable {
+        @Override
+        public void run() {
+            DataInputStream inputStream = Client.getIncomingStream();
+            while (true){
+                try {
+                    Message message = (Message) JSONizable.fromJSON(inputStream.readUTF());
+                    System.out.println(message);
+                    chatTextArea.appendText(message.message+ "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

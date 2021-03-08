@@ -4,7 +4,8 @@ public class User extends JSONizable {
     public int id;
     public String username;
     public String fullName;
-
+    public String lastName;
+    
     public User() {
     }
 

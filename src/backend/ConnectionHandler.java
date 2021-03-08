@@ -1,6 +1,8 @@
 package backend;
 
+import backend.models.ErrorMessage;
 import backend.models.JSONizable;
+import backend.models.Message;
 import backend.models.Request;
 import backend.routes.UserRoutes;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,13 +36,28 @@ public class ConnectionHandler implements Runnable {
                 JSONizable parsedInput = JSONizable.fromJSON(incomingStream.readUTF());
                 if (parsedInput instanceof Request){
                     Request request = (Request) parsedInput;
-                    System.out.println(request.data.getClass());
                     switch (request.route){
                         case "login":{
-                            this.outgoingStream.writeUTF(UserRoutes.login((ArrayList) request.data).toJSON());
+                            JSONizable result = UserRoutes.login((ArrayList) request.data);
+                            if(!(result instanceof ErrorMessage) ){
+                                Server.addToConnections(this.socket);
+                            }
+                            this.outgoingStream.writeUTF(result.toJSON());
+                            break;
+                        }
+                        case "signup": {
+                            JSONizable result = UserRoutes.signup((ArrayList) request.data);
+                            if(!(result instanceof ErrorMessage) ){
+                                Server.addToConnections(this.socket);
+                            }
+                            this.outgoingStream.writeUTF(result.toJSON());
                             break;
                         }
                     }
+                }else if (parsedInput instanceof Message){
+                    Message message = (Message) parsedInput;
+                    System.out.println(message.toJSON());
+                    Server.broadcast(message);
                 }
             } catch (IOException e) {
                 //When client disconnects

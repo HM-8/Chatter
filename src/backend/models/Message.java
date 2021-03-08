@@ -5,4 +5,11 @@ public class Message extends JSONizable {
     public int sentFrom;
     public String message;
 
+    public Message() {
+    }
+
+    public Message(int sentFrom, String message) {
+        this.sentFrom = sentFrom;
+        this.message = message;
+    }
 }

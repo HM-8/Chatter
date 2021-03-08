@@ -1,6 +1,7 @@
 package backend.routes;
 
 import backend.DatabaseConnectionHandler;
+import backend.Server;
 import backend.models.ErrorMessage;
 import backend.models.JSONizable;
 import backend.models.User;
@@ -49,36 +50,21 @@ public class UserRoutes {
         }
     }
 
-    public boolean insertSingleUser(String[] user) {
-        String query = MessageFormat.format("INSERT INTO users (first_name, last_name, user_name, password) Values (''{0}'', ''{1}'', ''{2}'', ''{3}'')", user);
-
+    public static JSONizable signup(ArrayList args) {
+        String query = String.format("INSERT INTO users (first_name, last_name, user_name, password) Values ('%s', '%s', '%s', '%s')", args.get(0), args.get(1), args.get(2), args.get(3));
         try {
             int queryResult = statement.executeUpdate(query);
-
             if (queryResult == 1) {
-                return true;
+                query = String.format("SELECT id, first_name, last_name, user_name FROM users WHERE user_name = '%s'", args.get(2));
+                ResultSet rs = statement.executeQuery(query);
+                rs.next();
+                return new User(rs.getInt(1), rs.getString(1), rs.getString(2));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public boolean ifUserNameExists(String userName) {
-        String query = MessageFormat.format("SELECT count(1) FROM users WHERE user_name = ''{0}''", userName);
-
-        try {
-            ResultSet queryResult = statement.executeQuery(query);
-
-            if (queryResult.getInt(1) == 1) {
-                return true;
+        } catch (SQLException e) {
+            if(e.getSQLState() == "23000"){
+                return new ErrorMessage("Username already exists, try again");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        return false;
+        return new ErrorMessage("Unable to signup, try again");
     }
-
 }
