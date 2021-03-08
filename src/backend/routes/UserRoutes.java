@@ -33,6 +33,7 @@ public class UserRoutes {
         System.out.println(query);
         try {
             ResultSet qr = statement.executeQuery(query);
+            qr.next();
             User user = new User(qr.getInt(1), qr.getString(2), qr.getString(3));
             return user;
         } catch (SQLException e) {

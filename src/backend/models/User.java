@@ -5,6 +5,9 @@ public class User extends JSONizable {
     public String username;
     public String fullName;
 
+    public User() {
+    }
+
     public User(int id, String username, String fullName) {
         this.id = id;
         this.username = username;

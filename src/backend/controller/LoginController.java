@@ -36,17 +36,23 @@ public class LoginController {
     private Button login_submit_button;
 
     @FXML
-    public void validation() {
-        if (login_username.getText() == null) {
-            login_error_message.setText("Empty");
+    public boolean validate() {
+        if (login_username.getText().length() == 0) {
+            login_error_message.setText("Username cannot be empty");
+            return false;
         }
         if (login_password.getLength() < 8) {
-            login_error_message.setText("password must be more than 8 strings");
+            login_error_message.setText("password must be at least 8 characters");
+            return false;
         }
+        return true;
     }
 
     @FXML
     public void loginInSubmitButton() {
+        if(!validate()){
+            return;
+        }
         try {
             //send request
             Request request = new Request("login", new String[]{login_username.getText(), login_password.getText()});
@@ -63,13 +69,7 @@ public class LoginController {
                 client.setId(user.id);
                 client.setUsername(user.username);
                 client.setFullName(user.fullName);
-                Stage loginStage = (Stage) signup_page_label.getScene().getWindow();
-                loginStage.close();
-                Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Chat.fxml"));
-                Stage stage = new Stage();
-                stage.setTitle("Chatter");
-                stage.setScene(new Scene(root));
-                stage.show();
+                loadChatPage();
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -78,12 +78,23 @@ public class LoginController {
         }
     }
 
-    @FXML
-    public void signupPage() {
-
+    private void loadChatPage() {
         try {
-            System.out.println("signup page");
+            Stage loginStage = (Stage) signup_page_label.getScene().getWindow();
+            loginStage.close();
+            Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Chat.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Chatter");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @FXML
+    public void loadSignupPage() {
+        try {
             Stage loginStage = (Stage) signup_page_label.getScene().getWindow();
             loginStage.close();
             Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Signup.fxml"));
@@ -91,9 +102,8 @@ public class LoginController {
             stage.setTitle("Chatter");
             stage.setScene(new Scene(root));
             stage.show();
-
-
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Can't load window!");
         }
     }
