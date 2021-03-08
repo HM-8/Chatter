@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="484.0" style="-fx-background-color: #1D3557;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="backend.controller.LoginController">
+    <children>
+        <Label layoutX="89.0" layoutY="168.0" text="Username:" textFill="#f1faee" />
+        <Label layoutX="89.0" layoutY="219.0" text="Password:" textFill="#f1faee" />
+        <TextField id="username" fx:id="login_username" layoutX="168.0" layoutY="164.0" prefHeight="25.0" prefWidth="176.0" />
+        <PasswordField id="password" fx:id="login_password" layoutX="168.0" layoutY="215.0"  prefHeight="25.0" prefWidth="176.0" />
+        <Button id="login_submit" fx:id="login_submit_button" layoutX="106.0" layoutY="297.0" mnemonicParsing="false" onAction="#loginInSubmitButton" prefHeight="25.0" prefWidth="274.0" style="-fx-background-color: #fca311;" text="Login" textFill="#f2faf0" />
+        <Label layoutX="198.0" layoutY="56.0" prefHeight="46.0" prefWidth="89.0" text="Chatter " textFill="#fca311">
+            <font>
+                <Font size="25.0" />
+            </font>
+        </Label>
+      <Label layoutX="106.0" layoutY="347.0" text="Don't have an account?" textFill="white" />
+        <Label id="signup_page" fx:id="signup_page_label" layoutX="237.0" layoutY="347.0" onMouseClicked="#loadSignupPage" text="Signup" textFill="#fca311" />
+      <Label id="error_message" fx:id="login_error_message" layoutX="168.0" layoutY="249.0" textFill="RED" />
+      <Label layoutX="274.0" layoutY="347.0" text=" here!" textFill="WHITE" />
+    </children>
+</AnchorPane>

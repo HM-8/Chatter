@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../../../../JavaFx/javafx-sdk-11.0.2/lib" />
+b      <root url="file://$PROJECT_DIR$/../../../../../../JavaFx/javafx-sdk-11.0.2/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
