@@ -1,19 +1,29 @@
 package backend.controller;
 
-import backend.DatabaseConnectionHandler;
+import backend.Client;
+import backend.models.ErrorMessage;
+import backend.models.JSONizable;
+import backend.models.Request;
+import backend.models.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class LoginController {
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static DataOutputStream outgoingStream = Client.getOutgoingStream();
+    private static DataInputStream incomingStream = Client.getIncomingStream();
     @FXML
     private TextField login_username;
     @FXML
@@ -21,64 +31,79 @@ public class LoginController {
     @FXML
     private Label login_error_message;
     @FXML
-    private Label login_signup_label;
+    private Label signup_page_label;
     @FXML
     private Button login_submit_button;
 
     @FXML
-    public void validation(){
-        if (login_username.getText() == null) {
-            login_error_message.setText("Empty");
+    public boolean validate() {
+        if (login_username.getText().length() == 0) {
+            login_error_message.setText("Username cannot be empty");
+            return false;
         }
-        if (login_password.getLength()<8){
-            login_error_message.setText("password must be more than 8 strings");
+        if (login_password.getLength() < 8) {
+            login_error_message.setText("password must be at least 8 characters");
+            return false;
         }
+        return true;
     }
 
     @FXML
     public void loginInSubmitButton() {
+        if(!validate()){
+            return;
+        }
         try {
-            DatabaseConnectionHandler connectNow = new DatabaseConnectionHandler();
-            Connection connectDb = connectNow.getConnection();
-
-            String verifyLogin = "SELECT count(1) FROM users WHERE user_name = '" + login_username.getText() + "' AND password = '" + login_password.getText() + "'";
-
-            try {
-                Statement statement = connectDb.createStatement();
-                ResultSet queryResult = statement.executeQuery(verifyLogin);
-
-                while (queryResult.next()) {
-                    if (queryResult.getInt(1) == 1) {
-                        System.out.println("Logged in successfully!");
-                    } else {
-                        System.out.println("Invalid login! Please try again.");
-                    }
-                }
-            }catch (Exception e) {
-                e.printStackTrace();
+            //send request
+            Request request = new Request("login", new String[]{login_username.getText(), login_password.getText()});
+            outgoingStream.writeUTF(request.toJSON());
+            //receive response
+            JSONizable parsedInput = JSONizable.fromJSON(incomingStream.readUTF());
+            if (parsedInput instanceof ErrorMessage) {
+                ErrorMessage e = (ErrorMessage) parsedInput;
+                System.out.println(e.message);
+                login_error_message.setText(e.message);
+            } else {
+                User user = (User) parsedInput;
+                Client client = Client.getClient();
+                client.setId(user.id);
+                client.setUsername(user.username);
+                client.setFullName(user.fullName);
+                loadChatPage();
             }
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private void loadChatPage() {
+        try {
+            Stage loginStage = (Stage) signup_page_label.getScene().getWindow();
+            loginStage.close();
+            Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Chat.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Chatter");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    public void signupPage() {
-
+    public void loadSignupPage() {
         try {
-            System.out.println("signup page");
-
-            Stage loginStage =(Stage) login_signup_label.getScene().getWindow();
+            Stage loginStage = (Stage) signup_page_label.getScene().getWindow();
             loginStage.close();
             Parent root = FXMLLoader.load(ClassLoader.getSystemResource("frontend/Signup.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Chatter");
             stage.setScene(new Scene(root));
             stage.show();
-
-
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Can't load window!");
         }
     }

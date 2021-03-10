@@ -10,5 +10,6 @@
     <orderEntry type="library" exported="" name="lib" level="project" />
     <orderEntry type="library" exported="" name="mysql:mysql-connector-java:8.0.23" level="project" />
     <orderEntry type="library" name="io.github.cdimascio:java-dotenv:5.2.2" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.12.2" level="project" />
   </component>
 </module>
