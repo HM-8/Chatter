@@ -4,6 +4,7 @@ import backend.models.ErrorMessage;
 import backend.models.JSONizable;
 import backend.models.Message;
 import backend.models.Request;
+import backend.routes.MessageRoutes;
 import backend.routes.UserRoutes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,6 +52,11 @@ public class ConnectionHandler implements Runnable {
                                 Server.addToConnections(this.socket);
                             }
                             this.outgoingStream.writeUTF(result.toJSON());
+                            break;
+                        }
+                        case "send": {
+                            System.out.println("Data: " + request.data.toString());
+                            MessageRoutes.send((ArrayList) request.data);
                             break;
                         }
                     }
