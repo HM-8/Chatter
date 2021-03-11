@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,14 +23,11 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
     private static DataOutputStream out = Client.getOutgoingStream();
 
     @FXML
-    private TextField chatTextField;
-    @FXML
-    private TextArea chatTextArea;
+    private TextField chat_text_field;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.chatTextField.setText("");
-        this.chatTextArea.setEditable(false);
+        this.chat_text_field.setText("");
         Thread thread = new Thread(new IncomingMessageListener());
         thread.start();
     }
@@ -41,10 +39,10 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
             int clientId = client.getId();
 
             //send request
-            Request request = new Request("send", new String[]{String.valueOf(clientId), chatTextField.getText()});
+            Request request = new Request("send", new String[]{String.valueOf(clientId), chat_text_field.getText()});
             out.writeUTF(request.toJSON());
-            out.writeUTF(new Message(client.getId(),chatTextField.getText()).toJSON());
-            chatTextField.clear();
+            out.writeUTF(new Message(client.getId(),chat_text_field.getText()).toJSON());
+            chat_text_field.clear();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,7 +57,7 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
                 try {
                     Message message = (Message) JSONizable.fromJSON(inputStream.readUTF());
                     System.out.println(message);
-                    chatTextArea.appendText(message.message+ "\n");
+                    //chatTextArea.appendText(message.message+ "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
