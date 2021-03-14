@@ -13,6 +13,7 @@ import java.sql.Statement;
 public class DatabaseConnectionHandler {
     private static DatabaseConnectionHandler databaseConnectionHandler = new DatabaseConnectionHandler();
     private Connection connection;
+
     public DatabaseConnectionHandler() {
         Dotenv dotenv = Dotenv.load();
         String dbHost = "localhost";
@@ -45,17 +46,27 @@ public class DatabaseConnectionHandler {
 
     public void runMigration() {
         try {
-        Statement statement = getConnection().createStatement();
-            File[] migrations =new File("src/migrations").listFiles();
-            for (File migration : migrations) {
+            Statement statement = getConnection().createStatement();
+            File[] migrationFilesList = new File("src/migrations").listFiles();
+            for (File migration : migrationFilesList) {
                 try {
-                    String migrationContent = Files.readString(migration.toPath());
-                    statement.executeUpdate(migrationContent);
+                    String migrationFileContent = Files.readString(migration.toPath());
+                    for (String migrationStatement : migrationFileContent.split(";")) {
+                        try {
+                            statement.execute(migrationStatement);
+                        } catch (SQLException e) {
+                            String sqlState = e.getSQLState();
+                            if (sqlState.equals("42S22") /*if a column is already renamed*/
+                                || sqlState.equals("42S21") /*if a column already exists*/) continue;
+                            else {
+                                System.err.println("Unable to perform migration: " + migrationStatement);
+                                System.out.println(e.getSQLState());
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (SQLException ex) {
-                    System.out.println(ex.getMessage());
-                    System.out.println(ex.getSQLState());
                 }
             }
         } catch (SQLException e) {
