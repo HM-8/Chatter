@@ -52,13 +52,13 @@ public class DatabaseConnectionHandler {
                 try {
                     String migrationFileContent = Files.readString(migration.toPath());
                     for (String migrationStatement : migrationFileContent.split(";")) {
+                        if (migrationStatement.isBlank()) continue;
                         try {
                             statement.execute(migrationStatement);
                         } catch (SQLException e) {
                             String sqlState = e.getSQLState();
-                            if (sqlState.equals("42S22") /*if a column is already renamed*/
-                                || sqlState.equals("42S21") /*if a column already exists*/) continue;
-                            else {
+                            if (!sqlState.equals("42S22") /*if it's a column is already renamed error*/
+                                    && !sqlState.equals("42S21") /*if it's a column already exists error*/) {
                                 System.err.println("Unable to perform migration: " + migrationStatement);
                                 System.out.println(e.getSQLState());
                                 e.printStackTrace();
