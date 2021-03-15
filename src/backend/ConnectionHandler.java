@@ -59,6 +59,10 @@ public class ConnectionHandler implements Runnable {
                             MessageRoutes.send((ArrayList) request.data);
                             break;
                         }
+                        case "myChats": {
+                            ArrayList userChatsArraylist= UserRoutes.getChats((ArrayList)request.data);
+                            this.outgoingStream.writeUTF(mapper.writeValueAsString(userChatsArraylist));
+                        }
                     }
                 }else if (parsedInput instanceof Message){
                     Message message = (Message) parsedInput;
