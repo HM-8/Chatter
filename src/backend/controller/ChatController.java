@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -31,6 +32,7 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
         Thread thread = new Thread(new IncomingMessageListener());
         thread.start();
     }
+
 
     @Override
     public void handle(ActionEvent actionEvent) {
