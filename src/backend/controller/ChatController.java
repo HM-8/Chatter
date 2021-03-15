@@ -46,6 +46,9 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
 
         } catch (IOException e) {
             e.printStackTrace();
+
+
+
         }
     }
 
