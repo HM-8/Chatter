@@ -3,15 +3,20 @@ package backend.models;
 public class User extends JSONizable {
     public int id;
     public String username;
-    public String fullName;
+    public String firstName;
     public String lastName;
     
     public User() {
     }
 
-    public User(int id, String username, String fullName) {
+    public User(int id, String username, String firstName, String lastName) {
         this.id = id;
         this.username = username;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
+    public String getFullName(){
+        return this.firstName + " " + this.lastName;
+    }
+
 }
