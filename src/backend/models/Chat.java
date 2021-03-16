@@ -1,13 +1,14 @@
 package backend.models;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 public class Chat extends JSONizable{
     private int id;
     private String title;
     private ArrayList<User> members = new ArrayList<>();
+
+    public Chat() {
+    }
 
     public Chat(int id, String title) {
         this.id = id;
@@ -44,7 +45,7 @@ public class Chat extends JSONizable{
         this.members.add(member);
     }
     @Override
-    public boolean equals(@NotNull Object o){
+    public boolean equals( Object o){
         if(o instanceof Chat){
             Chat c = (Chat)o;
             return this.id == c.id;
