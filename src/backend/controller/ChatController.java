@@ -4,30 +4,46 @@ import backend.Client;
 import backend.models.JSONizable;
 import backend.models.Message;
 import backend.models.Request;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.protobuf.StringValue;
+import de.jensd.fx.glyphs.emojione.EmojiOne;
+import de.jensd.fx.glyphs.emojione.EmojiOneView;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextArea;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class ChatController implements Initializable, EventHandler<ActionEvent> {
+public class ChatController implements EventHandler<ActionEvent> {
     private static DataInputStream in = Client.getIncomingStream();
     private static DataOutputStream out = Client.getOutgoingStream();
-
     @FXML
     private TextField chat_text_field;
+    @FXML
+    private static GridPane emoji_gridPane=new GridPane();
+    
+    private static ArrayList<EmojiOne> emojiOnes=new ArrayList<>();
 
-    @Override
+    private  BooleanProperty visible = new SimpleBooleanProperty(false);
+
+
+    @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
         this.chat_text_field.setText("");
         Thread thread = new Thread(new IncomingMessageListener());
         thread.start();
@@ -48,11 +64,10 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
 
         } catch (IOException e) {
             e.printStackTrace();
-
-
-
         }
     }
+
+
 
     private class IncomingMessageListener implements Runnable {
         @Override

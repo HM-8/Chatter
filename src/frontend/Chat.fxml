@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.emojione.EmojiOneView?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
+<?import de.jensd.fx.glyphs.emojione.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="575.0" prefWidth="1009.0" style="-fx-background-color: #fcfcf5;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="backend.controller.ChatController">
+<AnchorPane prefHeight="575.0" prefWidth="1009.0" style="-fx-background-color: #fcfcf5;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="backend.controller.ChatController">
     <Pane layoutX="281.0" layoutY="72.0" prefHeight="416.0" prefWidth="457.0">
       <ScrollPane fx:id="chat_display_panel" hbarPolicy="NEVER" layoutY="9.0" prefHeight="407.0" prefWidth="457.0">
-          <TextArea fx:id="chat_textArea" layoutY="9.0" prefHeight="407.0" prefWidth="457.0" />
+         <Pane>
+            <children>
+                <ListView fx:id="chat_textArea_listView" prefHeight="407.0" prefWidth="457.0" />
+            </children>
+         </Pane>
       </ScrollPane>
    </Pane>
     <TextField fx:id="chat_text_field" layoutX="279.0" layoutY="496.0" prefHeight="38.0" prefWidth="440.0" promptText="Type Your Message..." style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: white; -fx-border-width: 3;">
@@ -37,8 +36,7 @@
             <Font size="55.0" />
          </font>
       </FontAwesomeIconView>
-<!--        <FontAwesomeIconView fill="#1d3557" glyphName="SEARCH" layoutX="203.0" layoutY="42.0"/>-->
-<!--        <FontAwesomeIconView glyphName="GRINNING" layoutX="402.0" layoutY="33.0" />|-->
+
     </Pane>
     <Pane layoutX="756.0" layoutY="190.0" prefHeight="377.0" prefWidth="232.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 0.3; -fx-border-color: grey;">
         <Label fx:id="username_text" layoutX="102.0" layoutY="81.0" text="Label" />
@@ -46,14 +44,42 @@
         <ListView fx:id="person_info" layoutX="17.0" layoutY="152.0" prefHeight="213.0" prefWidth="200.0" />
         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="18.0" layoutY="-61.0" pickOnBounds="true" preserveRatio="true" />
     </Pane>
-<!--    <FontAwesomeIconView glyphName="IMAGE" layoutX="402.0" layoutY="33.0" />-->
-<!--    <FontAwesomeIconView fill="#1d3557" glyphName="SEND" layoutX="702.0" layoutY="521.0" size="15" />-->
     <Pane layoutX="283.0" layoutY="13.0" prefHeight="60.0" prefWidth="452.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: grey; -fx-border-width: 0.3;">
         <ImageView fitHeight="51.0" fitWidth="91.0" layoutX="20.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
-        <!--            <Avatar layoutX="20.0" layoutY="7.0" />-->
     </Pane>
     <FontAwesomeIconView fill="#fca311" glyphName="FILE" layoutX="693.0" layoutY="517.0" />
-   <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" strokeWidth="2.0" text="😀" />
+   <Button id="emoji" fx:id="chat_textfield_emoji" layoutX="631.0" layoutY="517.0" onAction="#emoji"  text="😀" />
    <FontAwesomeIconView fill="#1d3557" glyphName="SEND" layoutX="720.0" layoutY="517.0" />
    <FontAwesomeIconView fill="#fca311" glyphName="IMAGE" layoutX="660.0" layoutY="517.0" text="" />
+
+    <GridPane fx:id="emoji_gridpane" alignment="CENTER" hgap="20.0" layoutX="450.0" layoutY="300.0"
+              prefHeight="159.0" prefWidth="290.0" style="-fx-background-color: #1d3557; -fx-border-radius: 5; -fx-background-radius: 5;" vgap="20.0" visible="false">
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
+      <padding>
+         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      </padding>
+    </GridPane>
+
 </AnchorPane>
