@@ -68,7 +68,7 @@ public class LoginController {
                 Client client = Client.getClient();
                 client.setId(user.id);
                 client.setUsername(user.username);
-                client.setFullName(user.fullName);
+                client.setFullName(user.getFullName());
                 loadChatPage();
             }
         } catch (JsonProcessingException e) {

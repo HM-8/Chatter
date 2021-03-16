@@ -1,7 +1,7 @@
 package backend.routes;
 
 import backend.DatabaseConnectionHandler;
-import backend.Server;
+import backend.models.Chat;
 import backend.models.ErrorMessage;
 import backend.models.JSONizable;
 import backend.models.User;
@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class UserRoutes {
@@ -30,12 +29,12 @@ public class UserRoutes {
     }
 
     public static JSONizable login(ArrayList args) throws JsonProcessingException {
-        String query = String.format("SELECT id, user_name, CONCAT(first_name, \" \" , last_name) FROM users WHERE user_name = '%s' AND password = '%s' Limit 1;", args.get(0), args.get(1));
+        String query = String.format("SELECT id, user_name, first_name, last_name FROM users WHERE user_name = '%s' AND password = '%s' Limit 1;", args.get(0), args.get(1));
         System.out.println(query);
         try {
             ResultSet qr = statement.executeQuery(query);
             qr.next();
-            User user = new User(qr.getInt(1), qr.getString(2), qr.getString(3));
+            User user = new User(qr.getInt(1), qr.getString(2), qr.getString(3), qr.getString(4)    );
             return user;
         } catch (SQLException e) {
                 System.out.println(e.getMessage());
@@ -55,10 +54,10 @@ public class UserRoutes {
         try {
             int queryResult = statement.executeUpdate(query);
             if (queryResult == 1) {
-                query = String.format("SELECT id, first_name, last_name, user_name FROM users WHERE user_name = '%s'", args.get(2));
+                query = String.format("SELECT id, user_name, first_name, last_name FROM users WHERE user_name = '%s'", args.get(2));
                 ResultSet rs = statement.executeQuery(query);
                 rs.next();
-                return new User(rs.getInt(1), rs.getString(1), rs.getString(2));
+                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
             }
         } catch (SQLException e) {
             if(e.getSQLState() == "23000"){
@@ -66,5 +65,45 @@ public class UserRoutes {
             }
         }
         return new ErrorMessage("Unable to signup, try again");
+    }
+
+    public static Chat[] getChats(ArrayList data) {
+        String user_id = String.valueOf(data.get(0));
+        String query = String.format("SELECT c.id as chat_id, c.type as chat_type, u.id as user_id, u.first_name , u.last_name, u.user_name from chats c JOIN users_chats cv1 on cv1.user_id = %s and c.id = cv1.chat_id JOIN users_chats cv2 on cv2.chat_id = cv1.chat_id JOIN users u on cv2.user_id = u.id;",user_id);
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            ArrayList<Chat> chatArrayList = new ArrayList<>();
+            Chat newChat;
+            while(rs.next()){
+                String chatType = rs.getString("chat_type");
+                newChat = new Chat(rs.getInt("chat_id"));
+                //Create a newMember
+                User newMember = new User();
+                newMember.id = rs.getInt("user_id");
+                newMember.firstName = rs.getString("first_name");
+                newMember.lastName = rs.getString("last_name");
+                newMember.username = rs.getString("user_name");
+
+                //if chatList contains the chat add a member to the existing chat
+                if (chatArrayList.contains(newChat)) {
+                    Chat existingChat = chatArrayList.get(chatArrayList.indexOf(newChat));
+                    existingChat.addMember(newMember);
+                }else{
+                    //if the chat is not in the list add it to the list and add a member to it
+                    newChat.addMember(newMember);
+                    if(chatType.equals("user")){
+                        //if the chat is of type 'user', set its title to the user's username
+                        newChat.setTitle(newChat.getMembers().stream().filter(user -> user.id!=Integer.parseInt(user_id)).findFirst().get().username);
+                    }
+                    chatArrayList.add(newChat);
+                }
+            }
+            Chat [] chatsArray = new Chat[chatArrayList.size()];
+            return chatArrayList.toArray(chatsArray);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+            System.out.println(sqlException.getSQLState());
+        }
+        return null;
     }
 }
