@@ -1,5 +1,8 @@
 package backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"fullName"})
 public class User extends JSONizable {
     public int id;
     public String username;
