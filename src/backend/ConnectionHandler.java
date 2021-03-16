@@ -62,6 +62,10 @@ public class ConnectionHandler implements Runnable {
                             Chat[] userChatsArraylist = UserRoutes.getChats((ArrayList) request.data);
                             this.outgoingStream.writeUTF(mapper.writeValueAsString(userChatsArraylist));
                         }
+                        case "getMessages": {
+                            Message[] chatMessagesList = MessageRoutes.getMessages((ArrayList) request.data);
+                            this.outgoingStream.writeUTF(mapper.writeValueAsString(chatMessagesList));
+                        }
                     }
                 } else if (parsedInput instanceof Message) {
                     Message message = (Message) parsedInput;
@@ -75,6 +79,7 @@ public class ConnectionHandler implements Runnable {
             } catch (IOException e) {
                 //When client disconnects
                 System.out.println("Client disconnected");
+                e.printStackTrace();
                 closeThread();
             }
         }

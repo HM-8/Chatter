@@ -1,8 +1,10 @@
 package backend.routes;
 
 import backend.DatabaseConnectionHandler;
+import backend.models.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -32,5 +34,22 @@ public class MessageRoutes {
             e.printStackTrace();
         }
 
+    }
+
+    public static Message[] getMessages(ArrayList<String> data) {
+        String query = String.format("select * from messages where `to`=%s;", data.get(0));
+        ArrayList<Message> messagesArrayList = new ArrayList<>();
+        try {
+            Statement statement = DatabaseConnectionHandler.getHandler().getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()){
+                messagesArrayList.add(new Message(rs.getInt("id"), rs.getInt("from"), rs.getString("content"),rs.getInt("to")));
+            }
+            Message[] messagesList= new Message[messagesArrayList.size()];
+            return messagesArrayList.toArray(messagesList);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return new Message[0];
     }
 }
