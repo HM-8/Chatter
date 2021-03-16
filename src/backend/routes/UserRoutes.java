@@ -67,8 +67,9 @@ public class UserRoutes {
         return new ErrorMessage("Unable to signup, try again");
     }
 
-    public static ArrayList getChats(ArrayList data) {
-        String query = String.format("SELECT c.id as chat_id, c.type as chat_type, u.id as user_id, u.first_name , u.last_name, u.user_name from chats c JOIN users_chats cv1 on cv1.user_id = %s and c.id = cv1.chat_id JOIN users_chats cv2 on cv2.chat_id = cv1.chat_id JOIN users u on cv2.user_id = u.id;",data.get(0));
+    public static Chat[] getChats(ArrayList data) {
+        String user_id = String.valueOf(data.get(0));
+        String query = String.format("SELECT c.id as chat_id, c.type as chat_type, u.id as user_id, u.first_name , u.last_name, u.user_name from chats c JOIN users_chats cv1 on cv1.user_id = %s and c.id = cv1.chat_id JOIN users_chats cv2 on cv2.chat_id = cv1.chat_id JOIN users u on cv2.user_id = u.id;",user_id);
         try {
             ResultSet rs = statement.executeQuery(query);
             ArrayList<Chat> chatArrayList = new ArrayList<>();
@@ -92,12 +93,13 @@ public class UserRoutes {
                     newChat.addMember(newMember);
                     if(chatType.equals("user")){
                         //if the chat is of type 'user', set its title to the user's username
-                        newChat.setTitle(newChat.getMembers().get(0).username);
+                        newChat.setTitle(newChat.getMembers().stream().filter(user -> user.id!=Integer.parseInt(user_id)).findFirst().get().username);
                     }
                     chatArrayList.add(newChat);
                 }
             }
-            return chatArrayList;
+            Chat [] chatsArray = new Chat[chatArrayList.size()];
+            return chatArrayList.toArray(chatsArray);
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
             System.out.println(sqlException.getSQLState());
