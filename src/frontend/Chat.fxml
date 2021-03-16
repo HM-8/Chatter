@@ -14,7 +14,7 @@
       <ScrollPane fx:id="chat_display_panel" hbarPolicy="NEVER" layoutY="9.0" prefHeight="407.0" prefWidth="457.0">
          <Pane>
             <children>
-                <ListView fx:id="chat_textArea_listView" prefHeight="407.0" prefWidth="457.0" />
+                <ListView fx:id="message_list_view" prefHeight="407.0" prefWidth="457.0" />
             </children>
          </Pane>
       </ScrollPane>
@@ -48,7 +48,7 @@
         <ImageView fitHeight="51.0" fitWidth="91.0" layoutX="20.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
     </Pane>
     <FontAwesomeIconView fill="#fca311" glyphName="FILE" layoutX="693.0" layoutY="517.0" />
-   <Button id="emoji" fx:id="chat_textfield_emoji" layoutX="631.0" layoutY="517.0" onAction="#emoji"  text="😀" />
+   <Button id="emoji" fx:id="chat_textfield_emoji" layoutX="631.0" layoutY="517.0"  text="😀" />
    <FontAwesomeIconView fill="#1d3557" glyphName="SEND" layoutX="720.0" layoutY="517.0" />
    <FontAwesomeIconView fill="#fca311" glyphName="IMAGE" layoutX="660.0" layoutY="517.0" text="" />
 

@@ -5,13 +5,15 @@ import backend.models.Chat;
 import backend.models.JSONizable;
 import backend.models.Message;
 import backend.models.Request;
+import frontend.MessageListCell;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
@@ -19,6 +21,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable, EventHandler<ActionEvent> {
@@ -26,7 +30,10 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
     private static DataOutputStream out = Client.getOutgoingStream();
 
     public Chat currentChat;
+    public ObservableList<Message> currentChatMessages = FXCollections.observableArrayList(new ArrayList<Message>());
     public ListView<Chat> listView;
+    @FXML
+    public ListView<Message> message_list_view;
 
     @FXML
     private TextField chat_text_field;
@@ -44,12 +51,35 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
             @Override
             public void handle(MouseEvent mouseEvent) {
                 Chat chat = listView.getSelectionModel().getSelectedItems().get(0);
-                currentChat = chat;
-                System.out.println(chat);
+                setCurrentChat(chat);
             }
+        });
+        message_list_view.setCellFactory(messageListView -> {
+            return new MessageListCell();
         });
 //        Thread thread = new Thread(new IncomingMessageListener());
 //        thread.start();
+    }
+
+    private void setCurrentChat(Chat chat) {
+        currentChatMessages.clear();
+        this.currentChat = chat;
+        Request request = new Request("getMessages", new String[]{String.valueOf(chat.getId())});
+        DataOutputStream outputStream = Client.getOutgoingStream();
+        DataInputStream inputStream = Client.getIncomingStream();
+        try {
+            outputStream.writeUTF(request.toJSON());
+            JSONizable[] array =  JSONizable.fromJSONArray(inputStream.readUTF(), Message[].class);
+            Message[] messages = (Message[])array;
+//            currentChatMessages.addAll(messages);
+            currentChatMessages.addAll(Arrays.asList(messages));
+//            message_list_view.getItems().setAll(currentChatMessages);
+        message_list_view.setItems(currentChatMessages);
+            message_list_view.refresh();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
