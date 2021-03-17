@@ -6,6 +6,7 @@ import backend.models.JSONizable;
 import backend.models.Message;
 import backend.models.Request;
 import backend.routes.MessageRoutes;
+import de.jensd.fx.glyphs.emojione.EmojiOne;
 import frontend.MessageListCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,10 +14,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -36,6 +39,7 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
     public Chat currentChat;
     public ObservableList<Message> currentChatMessages = FXCollections.observableArrayList(new ArrayList<Message>());
     public ListView<Chat> listView;
+    public String emoji_string;
     @FXML
     public ListView<Message> message_list_view;
 
@@ -226,5 +230,42 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
 //            lock.unlock();
         }
         return new Chat[0];
+    }
+    public void emoji_chooser(MouseEvent event) throws IOException {
+        int column = GridPane.getColumnIndex((Node) event.getSource());
+        int row = GridPane.getRowIndex((Node) event.getSource());
+        System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
+         if(column==0&&row==0){
+             emoji_string= String.valueOf(EmojiOne.GRINNING);
+         }else if(column==0&&row==1){
+             emoji_string=String.valueOf(EmojiOne.GRIN);
+         }else if(column==0&&row==2){
+             emoji_string=String.valueOf(EmojiOne.RELAXED);
+         }else if(column==0&&row==3){
+             emoji_string=String.valueOf(EmojiOne.SLIGHT_SMILE);
+         }else if(column==1&&row==0){
+             emoji_string=String.valueOf(EmojiOne.JOY);
+         }else if(column==1&&row==1){
+             emoji_string=String.valueOf(EmojiOne.KISSING_CLOSED_EYES);
+         }else if(column==1&&row==2){
+             emoji_string=String.valueOf(EmojiOne.NERD);
+         }else if(column==1&&row==3){
+             emoji_string=String.valueOf(EmojiOne.ANGRY);
+         }else if(column==2&&row==0){
+             emoji_string=String.valueOf(EmojiOne.INNOCENT);
+         }else if(column==2&&row==1){
+             emoji_string=String.valueOf(EmojiOne.HEAD_BANDAGE);
+         }else if(column==2&&row==2){
+             emoji_string=String.valueOf(EmojiOne.HEARTS);
+         }else if(column==2&&row==3){
+             emoji_string=String.valueOf(EmojiOne.SCREAM_CAT);
+         }else if(column==3&&row==0){
+             emoji_string=String.valueOf(EmojiOne.FOX);
+         }else if(column==3&&row==1){
+             emoji_string=String.valueOf(EmojiOne.CRESCENT_MOON);
+         }
+         DataOutputStream dataOutputStream=Client.getOutgoingStream();
+
+        Message mesg=new Message(Client.getClient().getId(),currentChat.getId(),emoji_string);
     }
 }

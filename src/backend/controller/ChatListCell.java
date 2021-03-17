@@ -5,11 +5,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
 import javax.sound.midi.Soundbank;
@@ -29,8 +32,11 @@ public class ChatListCell extends ListCell<Chat>{
     private HBox hBox = new HBox();
 
     public ChatListCell() {
-        hBox.getChildren().addAll(chat_title, chat_message_badge);
-        chat_message_badge.setAlignment(CENTER);
+        Region region = new Region();
+        region.setMaxWidth(120);
+        hBox.setHgrow(region, Priority.ALWAYS);
+        hBox.getChildren().addAll(chat_title, region, chat_message_badge);
+        hBox.setAlignment(Pos.CENTER_RIGHT);
         chat_message_badge.setMaxWidth(70);
         chat_message_badge.setPrefHeight(25);
         chat_message_badge.setPrefWidth(25);

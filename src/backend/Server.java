@@ -1,7 +1,7 @@
 package backend;
 
 import backend.models.Message;
-import backend.models.User;
+import backend.models.Chat;
 import backend.routes.UserRoutes;
 
 import java.io.DataOutputStream;
@@ -29,6 +29,18 @@ public class Server implements Runnable{
             try {
                 DataOutputStream outputStream =  new DataOutputStream(connection.getSocket().getOutputStream());
                 outputStream.writeUTF(message.toJSON());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public static void broadcast(Chat chat) {
+        Integer[] userIdList = UserRoutes.getUsersForChat(chat.getId());
+        Predicate<ConnectionHandler> isInChat = connection -> Arrays.asList(userIdList).contains(connection.getClient_id());
+        for(ConnectionHandler connection : connections.stream().filter(isInChat).collect(Collectors.toList())){
+            try {
+                DataOutputStream outputStream =  new DataOutputStream(connection.getSocket().getOutputStream());
+                outputStream.writeUTF(chat.toJSON());
             } catch (IOException e) {
                 e.printStackTrace();
             }
