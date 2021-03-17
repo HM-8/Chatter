@@ -6,7 +6,7 @@ public class Chat extends JSONizable{
     private int id;
     private String title;
     private ArrayList<User> members = new ArrayList<>();
-
+    private String type;
     public Chat() {
     }
 
@@ -51,5 +51,17 @@ public class Chat extends JSONizable{
             return this.id == c.id;
         }
         return false;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int typeInt() {
+        return type.equals("user")? 1 : type.equals("group")? 2: 3;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
