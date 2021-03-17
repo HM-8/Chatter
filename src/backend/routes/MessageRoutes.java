@@ -24,9 +24,9 @@ public class MessageRoutes {
     protected MessageRoutes () {
     }
 
-    public static void send(ArrayList args) {
-        int clientId = Integer.valueOf((String) args.get(0));
-        String query = String.format("INSERT INTO messages (sent_from, message) VALUES ('%d', '%s')", clientId, args.get(1));
+    public static void send(Message m) {
+//        int clientId = Integer.valueOf((String) args.get(0));
+        String query = String.format("INSERT INTO messages (`from`,`to` , content) VALUES (%d, %d, '%s')", m.from, m.to,m.message);
 
         try {
             statement.executeUpdate(query);
