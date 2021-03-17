@@ -5,6 +5,7 @@ import backend.models.Chat;
 import backend.models.JSONizable;
 import backend.models.Message;
 import backend.models.Request;
+import backend.routes.MessageRoutes;
 import frontend.MessageListCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,9 +18,9 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.*;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -117,6 +118,61 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
 
     public void submit(MouseEvent mouseEvent) {
         System.out.println("clicked");
+    }
+
+    public void pickFile(MouseEvent mouseEvent) {
+        try {
+            String className = UIManager.getSystemLookAndFeelClassName();
+            UIManager.setLookAndFeel(className);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select File");
+        fileChooser.showOpenDialog(null);
+        File file = fileChooser.getSelectedFile();
+        int length = (int) file.length();
+        Client client = Client.getClient();
+        int fromId = client.getId();
+        int toId = currentChat.getId();
+        String type = "file";
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            Object[] args = new Object[]{fromId, null, toId, type, fileInputStream, length};
+
+            MessageRoutes messageRoutes = new MessageRoutes();
+            messageRoutes.send(args);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pickImage(MouseEvent mouseEvent) {
+        try {
+            String className = UIManager.getSystemLookAndFeelClassName();
+            UIManager.setLookAndFeel(className);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        JFileChooser picChooser = new JFileChooser();
+        picChooser.setDialogTitle("Select Image");
+        picChooser.showOpenDialog(null);
+        File image = picChooser.getSelectedFile();
+        int length = (int) image.length();
+        Client client = Client.getClient();
+        int fromId = client.getId();
+        int toId = currentChat.getId();
+        String type = "image";
+
+        try {
+            FileInputStream imageInputStream = new FileInputStream(image);
+            Object[] args = new Object[]{fromId, null, toId, type, imageInputStream, length};
+            MessageRoutes messageRoutes = new MessageRoutes();
+            messageRoutes.send(args);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private class IncomingMessageListener implements Runnable {

@@ -31,7 +31,7 @@
         <Pane layoutX="1.0" layoutY="1.0" prefHeight="576.0" prefWidth="91.0" style="-fx-background-color: #1D3557; -fx-background-radius: 15;" />
         <ListView fx:id="listView" layoutX="93.0" prefHeight="571.0" prefWidth="161.0" />
       <FontAwesomeIconView fill="#1d3557" glyphName="SEARCH" layoutX="222.0" layoutY="27.0" />
-      <FontAwesomeIconView fill="#fca311" glyphName="PLUS" layoutX="222.0" layoutY="506.0" size="30" text="+" onMouseClicked="#submit">
+      <FontAwesomeIconView fill="#fca311" glyphName="PLUS" layoutX="222.0" layoutY="506.0" onMouseClicked="#submit" size="30" text="+">
          <font>
             <Font size="55.0" />
          </font>
@@ -47,13 +47,12 @@
     <Pane layoutX="283.0" layoutY="13.0" prefHeight="60.0" prefWidth="452.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: grey; -fx-border-width: 0.3;">
         <ImageView fitHeight="51.0" fitWidth="91.0" layoutX="20.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
     </Pane>
-    <FontAwesomeIconView fill="#fca311" glyphName="FILE" layoutX="693.0" layoutY="517.0" />
-   <Button id="emoji" fx:id="chat_textfield_emoji" layoutX="631.0" layoutY="517.0"  text="😀" onAction="#handle"/>
+    <FontAwesomeIconView fill="#fca311" glyphName="FILE" layoutX="693.0" layoutY="517.0" onMouseClicked="#pickFile" />
+   <Button id="emoji" fx:id="chat_textfield_emoji" layoutX="631.0" layoutY="517.0" onAction="#handle" text="😀" />
    <FontAwesomeIconView fill="#1d3557" glyphName="SEND" layoutX="720.0" layoutY="517.0" />
-   <FontAwesomeIconView fill="#fca311" glyphName="IMAGE" layoutX="660.0" layoutY="517.0" text="" />
+   <FontAwesomeIconView fill="#fca311" glyphName="IMAGE" layoutX="660.0" layoutY="517.0" onMouseClicked="#pickImage" text="" />
 
-    <GridPane fx:id="emoji_gridpane" alignment="CENTER" hgap="20.0" layoutX="450.0" layoutY="300.0"
-              prefHeight="159.0" prefWidth="290.0" style="-fx-background-color: #1d3557; -fx-border-radius: 5; -fx-background-radius: 5;" vgap="20.0" visible="false">
+    <GridPane fx:id="emoji_gridpane" alignment="CENTER" hgap="20.0" layoutX="450.0" layoutY="300.0" prefHeight="159.0" prefWidth="290.0" style="-fx-background-color: #1d3557; -fx-border-radius: 5; -fx-background-radius: 5;" vgap="20.0" visible="false">
         <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="1" />
         <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="2" />
@@ -80,6 +79,14 @@
       <padding>
          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
       </padding>
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
     </GridPane>
 
 </AnchorPane>
