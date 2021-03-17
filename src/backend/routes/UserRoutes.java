@@ -111,4 +111,41 @@ public class UserRoutes {
         }
         return null;
     }
+
+    public static Integer[] getUsersForChat(int to) {
+        String query = String.format("Select u.id from users u join users_chats uc on uc.chat_id = %d", to);
+        ArrayList<Integer> idArrayList = new ArrayList<>();
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                idArrayList.add(rs.getInt("id"));
+            }
+            Integer[] idList = new Integer[idArrayList.size()];
+            return idArrayList.toArray(idList);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return new Integer[0];
+    }
+    public User[] getAllUsers(String usernameQueryString) {
+        String query;
+        if(usernameQueryString == null){
+            query = "Select users.id, users.user_name, users.first_name, users.last_name from users;";
+        }
+        else{
+            query = String.format("Select users.id, users.user_name, users.first_name, users.last_name from users where users.user_name like %s;", usernameQueryString);
+        }
+        ArrayList<User> userArrayList = new ArrayList<>();
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()){
+                userArrayList.add(new User(rs.getInt("id"), rs.getString("user_name"), rs.getString("first_name"), rs.getString("last_name")));
+            }
+            User[] users = new User[userArrayList.size()];
+            return users;
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return new User[0];
+    }
 }
