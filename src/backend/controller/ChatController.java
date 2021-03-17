@@ -20,14 +20,17 @@ import javafx.scene.input.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.Lock;
 
 public class ChatController implements Initializable, EventHandler<ActionEvent> {
-    private static DataInputStream in = Client.getIncomingStream();
-    private static DataOutputStream out = Client.getOutgoingStream();
+//    private static DataInputStream in = Client.getIncomingStream();
+//    private static DataOutputStream out = Client.getOutgoingStream();
 
     public Chat currentChat;
     public ObservableList<Message> currentChatMessages = FXCollections.observableArrayList(new ArrayList<Message>());
@@ -57,59 +60,87 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
         message_list_view.setCellFactory(messageListView -> {
             return new MessageListCell();
         });
-//        Thread thread = new Thread(new IncomingMessageListener());
-//        thread.start();
+        Thread thread = new Thread(new IncomingMessageListener());
+        thread.start();
     }
 
     private void setCurrentChat(Chat chat) {
         currentChatMessages.clear();
         this.currentChat = chat;
         Request request = new Request("getMessages", new String[]{String.valueOf(chat.getId())});
+//        Lock lock = Client.getLock();
+//        lock.lock();
         DataOutputStream outputStream = Client.getOutgoingStream();
         DataInputStream inputStream = Client.getIncomingStream();
         try {
-            outputStream.writeUTF(request.toJSON());
-            JSONizable[] array =  JSONizable.fromJSONArray(inputStream.readUTF(), Message[].class);
-            Message[] messages = (Message[])array;
+            synchronized (inputStream) {
+                outputStream.writeUTF(request.toJSON());
+                JSONizable[] array = JSONizable.fromJSONArray(inputStream.readUTF(), Message[].class);
+                Message[] messages = (Message[]) array;
 //            currentChatMessages.addAll(messages);
-            currentChatMessages.addAll(Arrays.asList(messages));
+                currentChatMessages.addAll(Arrays.asList(messages));
 //            message_list_view.getItems().setAll(currentChatMessages);
-        message_list_view.setItems(currentChatMessages);
-            message_list_view.refresh();
+                message_list_view.setItems(currentChatMessages);
+                message_list_view.refresh();
+            }
+        } catch (SocketTimeoutException e) {
+            System.out.println("In getmessages methods canceled");
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+//            lock.unlock();
         }
 
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
+//            Lock lock = Client.getLock();
         try {
             Client client = Client.getClient();
             int clientId = client.getId();
 
             //send request
-            Request request = new Request("send", new String[]{String.valueOf(clientId), chat_text_field.getText()});
-            out.writeUTF(request.toJSON());
-            out.writeUTF(new Message(client.getId(), chat_text_field.getText()).toJSON());
+//            lock.lock();
+            DataOutputStream out = Client.getOutgoingStream();
+            out.writeUTF(new Message(client.getId(), (currentChat.getId()),chat_text_field.getText()).toJSON());
             chat_text_field.clear();
 
+        } catch (SocketTimeoutException e) {
+            System.out.println("in send method timeout");
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+//            lock.unlock();
         }
+    }
+
+    public void submit(MouseEvent mouseEvent) {
+        System.out.println("clicked");
     }
 
     private class IncomingMessageListener implements Runnable {
         @Override
         public void run() {
+//            Lock lock = Client.getLock();
             DataInputStream inputStream = Client.getIncomingStream();
+            ;
             while (true) {
                 try {
-                    Message message = (Message) JSONizable.fromJSON(inputStream.readUTF());
-                    System.out.println(message);
+//                    lock.lock();
+                    synchronized (inputStream) {
+                        Message message = (Message) JSONizable.fromJSON(inputStream.readUTF());
+//                        System.out.println(message);
+                        currentChatMessages.add(message);
+                        Thread.yield();
+                    }
                     //chatTextArea.appendText(message.message+ "\n");
+                } catch (SocketTimeoutException e) {
+                    System.out.println(e.getMessage());
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+//                    lock.unlock();
                 }
             }
         }
@@ -120,16 +151,23 @@ public class ChatController implements Initializable, EventHandler<ActionEvent> 
         int clientId = client.getId();
 
         Request getAllChatRequest = new Request("myChats", new String[]{String.valueOf(clientId)});
-
+//        Lock lock = Client.getLock();
         try {
+//            lock.lock();
             DataOutputStream outputStream = Client.getOutgoingStream();
-            outputStream.writeUTF(getAllChatRequest.toJSON());
             DataInputStream inputStream = Client.getIncomingStream();
-            String response = inputStream.readUTF();
-            Chat[] chats = (Chat[]) JSONizable.fromJSONArray(response, Chat[].class);
-            return chats;
+            synchronized (inputStream) {
+                outputStream.writeUTF(getAllChatRequest.toJSON());
+                String response = inputStream.readUTF();
+                Chat[] chats = (Chat[]) JSONizable.fromJSONArray(response, Chat[].class);
+                return chats;
+            }
+
+        } catch (SocketTimeoutException s) {
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+//            lock.unlock();
         }
         return new Chat[0];
     }

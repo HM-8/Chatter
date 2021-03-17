@@ -10,10 +10,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Client {
+    private static final int SOCKET_TIMEOUT = 1000;
     private static Client client=new Client();
-
+    private static Lock lock = new ReentrantLock();
     private int id;
     public String username;
     public String fullName;
@@ -25,11 +28,15 @@ public class Client {
         return client;
     }
 
-    public static DataInputStream getIncomingStream() {
+    public static Lock getLock() {
+        return lock;
+    }
+
+    public synchronized static DataInputStream getIncomingStream() {
         return incomingStream;
     }
 
-    public static DataOutputStream getOutgoingStream() {
+    public synchronized static DataOutputStream getOutgoingStream() {
         return outgoingStream;
     }
 
@@ -52,6 +59,7 @@ public class Client {
     public Client() {
         try {
             this.socket = new Socket("localhost", 5000);
+            this.socket.setSoTimeout(Client.SOCKET_TIMEOUT);
             this.incomingStream = new DataInputStream(socket.getInputStream());
             this.outgoingStream = new DataOutputStream(socket.getOutputStream());
         }catch (ConnectException e){
