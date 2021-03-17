@@ -20,4 +20,10 @@ public class Message extends JSONizable {
         this.message = message;
         this.to = to;
     }
+
+    public Message(int from, int to, String message) {
+        this.from = from;
+        this.message = message;
+        this.to = to;
+    }
 }
