@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="cc8fc514-2df8-4529-8ded-416a6742f056">
-        <schema name="chat_app" object-types="function, table, view, procedure" />
+        <schema name="chat_app" object-types="table" />
       </connection>
     </loaded-nodes>
   </component>
@@ -50,6 +50,7 @@
   <component name="DBNavigator.Project.FileConnectionMappingManager">
     <mapping file-url="file://$PROJECT_DIR$/src/migrations/first.sql" connection-id="cc8fc514-2df8-4529-8ded-416a6742f056" session-id="MAIN" current-schema="chat_app" />
     <mapping file-url="file://$PROJECT_DIR$/src/migrations/second.sql" connection-id="cc8fc514-2df8-4529-8ded-416a6742f056" session-id="MAIN" current-schema="chat_app" />
+    <mapping file-url="file://$PROJECT_DIR$/src/migrations/third.sql" connection-id="cc8fc514-2df8-4529-8ded-416a6742f056" session-id="MAIN" current-schema="chat_app" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
