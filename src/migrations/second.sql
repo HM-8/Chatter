@@ -1,17 +1,15 @@
 ALTER TABLE `messages`
   RENAME COLUMN `message` TO `content`;
 ALTER TABLE `messages`
-  RENAME COLUMN `sent_from` TO `from`;
+  RENAME COLUMN `sent_from` TO `from_id`;
 ALTER TABLE `messages`
-  ADD COLUMN `to` int(11) NOT NULL;
-ALTER TABLE `messages`
-  ADD COLUMN `chat_id` int(11) NOT NULL;
+  ADD COLUMN `to_id` int(11) NOT NULL;
 ALTER TABLE `messages`
   ADD COLUMN `type` ENUM ('text', 'image', 'emoji', 'file');
 ALTER TABLE `messages`
-  ADD COLUMN `content` text NOT NULL;
+  CHANGE COLUMN `content` `content` TEXT NULL;
 ALTER TABLE `messages`
-  ADD COLUMN `file_id` text NULL;
+  ADD COLUMN `file` LONGBLOB NULL;
 CREATE TABLE IF NOT EXISTS `chats` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `title` varchar(45) NOT NULL,
@@ -24,9 +22,9 @@ CREATE TABLE IF NOT EXISTS `users_chats` (
 );
 
 
-ALTER TABLE `messages` ADD FOREIGN KEY (`from`) REFERENCES `users` (`id`);
+ALTER TABLE `messages` ADD FOREIGN KEY (`from_id`) REFERENCES `users` (`id`);
 
-ALTER TABLE `messages` ADD FOREIGN KEY (`to`) REFERENCES `chats` (`id`);
+ALTER TABLE `messages` ADD FOREIGN KEY (`to_id`) REFERENCES `chats` (`id`);
 
 ALTER TABLE `users_chats` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
