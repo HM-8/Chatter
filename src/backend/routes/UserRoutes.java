@@ -7,6 +7,7 @@ import backend.models.JSONizable;
 import backend.models.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,7 +70,7 @@ public class UserRoutes {
 
     public static Chat[] getChats(ArrayList data) {
         String user_id = String.valueOf(data.get(0));
-        String query = String.format("SELECT c.id as chat_id, c.type as chat_type, u.id as user_id, u.first_name , u.last_name, u.user_name from chats c JOIN users_chats cv1 on cv1.user_id = %s and c.id = cv1.chat_id JOIN users_chats cv2 on cv2.chat_id = cv1.chat_id JOIN users u on cv2.user_id = u.id;", user_id);
+        String query = String.format("SELECT c.id as chat_id, c.title as chat_title, c.type as chat_type, u.id as user_id, u.first_name , u.last_name, u.user_name from chats c JOIN users_chats cv1 on cv1.user_id = %s and c.id = cv1.chat_id JOIN users_chats cv2 on cv2.chat_id = cv1.chat_id JOIN users u on cv2.user_id = u.id;", user_id);
         try {
             ResultSet rs = statement.executeQuery(query);
             ArrayList<Chat> chatArrayList = new ArrayList<>();
@@ -77,6 +78,8 @@ public class UserRoutes {
             while (rs.next()) {
                 String chatType = rs.getString("chat_type");
                 newChat = new Chat(rs.getInt("chat_id"));
+                newChat.setTitle(rs.getString("chat_title"));
+//                newChat.setTitle(rs.getString(""))
                 //Create a newMember
                 User newMember = new User();
                 newMember.id = rs.getInt("user_id");
@@ -96,8 +99,9 @@ public class UserRoutes {
                     newChat.addMember(newMember);
                     if (chatType.equals("user")) {
                         //if the chat is of type 'user', set its title to the user's username
-                        if (newMember.id != Integer.parseInt(user_id)) {
+                        if (newMember.id != Integer.parseInt(user_id) && newChat.getTitle() == null) {
                             newChat.setTitle(newMember.username);
+                            newChat.setType(chatType);
                         }
                     }
                     chatArrayList.add(newChat);
@@ -127,7 +131,7 @@ public class UserRoutes {
         }
         return new Integer[0];
     }
-    public User[] getAllUsers(String usernameQueryString) {
+    public static User[] getAllUsers( String usernameQueryString) {
         String query;
         if(usernameQueryString == null){
             query = "Select users.id, users.user_name, users.first_name, users.last_name from users;";
@@ -142,7 +146,7 @@ public class UserRoutes {
                 userArrayList.add(new User(rs.getInt("id"), rs.getString("user_name"), rs.getString("first_name"), rs.getString("last_name")));
             }
             User[] users = new User[userArrayList.size()];
-            return users;
+            return userArrayList.toArray(users);
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }

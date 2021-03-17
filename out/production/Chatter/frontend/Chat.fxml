@@ -14,7 +14,7 @@
       <ScrollPane fx:id="chat_display_panel" hbarPolicy="NEVER" layoutY="9.0" prefHeight="407.0" prefWidth="457.0">
          <Pane>
             <children>
-                <TextArea fx:id="chat_textArea" prefHeight="407.0" prefWidth="457.0" />
+                <ListView fx:id="message_list_view" prefHeight="407.0" prefWidth="457.0" />
             </children>
          </Pane>
       </ScrollPane>
@@ -28,10 +28,10 @@
         </padding>
     </TextField>
     <Pane layoutX="-1.0" layoutY="-2.0" prefHeight="570.0" prefWidth="250.0" style="-fx-background-color: white;">
-        <Pane layoutX="1.0" layoutY="1.0" prefHeight="576.0" prefWidth="91.0" style="-fx-background-color: #1D3557; -fx-background-radius: 15;" />
+        <Pane layoutX="1.0" layoutY="1.0" prefHeight="576.0" prefWidth="91.0" style="-fx-background-color: #1D3557;" />
         <ListView fx:id="listView" layoutX="93.0" prefHeight="571.0" prefWidth="161.0" />
       <FontAwesomeIconView fill="#1d3557" glyphName="SEARCH" layoutX="222.0" layoutY="27.0" />
-      <FontAwesomeIconView fill="#fca311" glyphName="PLUS" layoutX="222.0" layoutY="506.0" size="30" text="+">
+      <FontAwesomeIconView fill="#fca311" glyphName="PLUS" layoutX="222.0" layoutY="506.0" onMouseClicked="#submit" size="30" text="+">
          <font>
             <Font size="55.0" />
          </font>
@@ -43,43 +43,43 @@
         <Line endX="100.0" layoutX="113.0" layoutY="140.0" startX="-100.0" stroke="#fca311" />
         <ListView fx:id="person_info" layoutX="17.0" layoutY="152.0" prefHeight="213.0" prefWidth="200.0" />
         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="18.0" layoutY="-61.0" pickOnBounds="true" preserveRatio="true" />
+   
+       <GridPane fx:id="emoji_gridpane" alignment="CENTER" hgap="20.0" layoutX="16.0" layoutY="160.0" onMouseClicked="#emoji_chooser" prefHeight="203.0" prefWidth="201.0" style="-fx-background-color: #1d3557; -fx-border-radius: 5; -fx-background-radius: 5;" vgap="20.0">
+           <EmojiOneView fill="#fca311" glyphName="GRINNING" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+           <EmojiOneView fill="#fca311" glyphName="GRIN" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+           <EmojiOneView fill="#fca311" glyphName="RELAXED" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+           <EmojiOneView fill="#fca311" glyphName="SLIGHT_SMILE" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+           <EmojiOneView fill="#fca311" glyphName="JOY" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+           <EmojiOneView fill="#fca311" glyphName="KISSING_CLOSED_EYES" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+           <EmojiOneView fill="#fca311" glyphName="NERD" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+           <EmojiOneView fill="#fca311" glyphName="ANGRY" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+           <EmojiOneView fill="#fca311" glyphName="SCREAM_CAT" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" textOrigin="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+           <EmojiOneView fill="#fca311" glyphName="HEAD_BANDAGE" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+           <EmojiOneView fill="#fca311" glyphName="INNOCENT" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+           <EmojiOneView fill="#fca311" glyphName="HEARTS" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+           <EmojiOneView fill="#fca311" glyphName="FOX" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+           <EmojiOneView fill="#fca311" glyphName="CRESCENT_MOON" layoutX="631.0" layoutY="517.0" size="25" strokeWidth="2.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+
+       </GridPane>
     </Pane>
     <Pane layoutX="283.0" layoutY="13.0" prefHeight="60.0" prefWidth="452.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: grey; -fx-border-width: 0.3;">
         <ImageView fitHeight="51.0" fitWidth="91.0" layoutX="20.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
     </Pane>
     <FontAwesomeIconView fill="#fca311" glyphName="FILE" layoutX="693.0" layoutY="517.0" />
-   <Button id="emoji" fx:id="chat_textfield_emoji" layoutX="631.0" layoutY="517.0" onAction="#emoji"  text="😀" />
+   <Button id="emoji" fx:id="chat_textfield_emoji" layoutX="631.0" layoutY="517.0" onAction="#handle" text="😀" />
    <FontAwesomeIconView fill="#1d3557" glyphName="SEND" layoutX="720.0" layoutY="517.0" />
    <FontAwesomeIconView fill="#fca311" glyphName="IMAGE" layoutX="660.0" layoutY="517.0" text="" />
-
-    <GridPane fx:id="emoji_gridpane" alignment="CENTER" hgap="20.0" layoutX="450.0" layoutY="300.0"
-              prefHeight="159.0" prefWidth="290.0" style="-fx-background-color: #1d3557; -fx-border-radius: 5; -fx-background-radius: 5;" vgap="20.0">
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="0" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="1" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="0" GridPane.rowIndex="2" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="1" GridPane.rowIndex="0" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="1" GridPane.rowIndex="2" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="2" GridPane.rowIndex="0" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="2" GridPane.rowIndex="1" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="2" GridPane.rowIndex="2" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="3" GridPane.rowIndex="0" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="3" GridPane.rowIndex="1" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="3" GridPane.rowIndex="2" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="4" GridPane.rowIndex="0" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="4" GridPane.rowIndex="1" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="4" GridPane.rowIndex="2" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="5" GridPane.rowIndex="0" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="5" GridPane.rowIndex="1" />-->
-<!--        <EmojiOneView fill="#fca311" layoutX="631.0" layoutY="517.0" size="30" strokeWidth="2.0" text="😀" GridPane.columnIndex="5" GridPane.rowIndex="2" />-->
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
-      <padding>
-         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-      </padding>
-    </GridPane>
 
 </AnchorPane>

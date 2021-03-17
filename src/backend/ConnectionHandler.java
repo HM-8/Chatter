@@ -1,6 +1,7 @@
 package backend;
 
 import backend.models.*;
+import backend.routes.ChatRoutes;
 import backend.routes.MessageRoutes;
 import backend.routes.UserRoutes;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,12 +83,21 @@ public class ConnectionHandler implements Runnable {
                             this.outgoingStream.writeUTF(mapper.writeValueAsString(chatMessagesList));
                             break;
                         }
+                        case "allUsers": {
+                            User[] userList = UserRoutes.getAllUsers(null);
+                            this.outgoingStream.writeUTF(mapper.writeValueAsString(userList));
+                            break;
+                        }
                     }
                 } else if (parsedInput instanceof Message) {
                     Message message = (Message) parsedInput;
                     MessageRoutes.send(message);
                     System.out.println(message.toJSON());
                     Server.broadcast(message);
+                } else if (parsedInput instanceof Chat){
+                    ChatRoutes.creatChat((Chat)parsedInput);
+//                    Server.broadcast((Chat)parsedInput);
+                    outgoingStream.writeUTF(((Chat)parsedInput).toJSON());
                 }
             }catch(EOFException e){
 
